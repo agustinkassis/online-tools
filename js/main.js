@@ -38,11 +38,15 @@
         const hash = method(val, option.val());
 
         output.val(hash);
-        if (validateHash(hash)) {
-          alert("Encontradoo! Te ganaste 2000 SATS");
-          window.open(
-            "lightning:LNURL1DP68GURN8GHJ7VEEV9JRYDF4XV6RQTNY9EMX7MR5V9NK2CTSWQHXJME0WA5HG6RYWFSHWTMPWP5J7A339AKXUATJDSHKG32YV438YJN3DEG4S4MPDERXSD2KTPG4S5CV5T0Y6"
-          );
+
+        if (isValidHash(hash)) {
+          input.attr("disabled", true);
+          setTimeout(() => {
+            alert("Encontradoo! Te ganaste 2000 SATS");
+            window.open(
+              "lightning:LNURL1DP68GURN8GHJ7VEEV9JRYDF4XV6RQTNY9EMX7MR5V9NK2CTSWQHXJME0WA5HG6RYWFSHWTMPWP5J7A339AKXUATJDSHKG32YV438YJN3DEG4S4MPDERXSD2KTPG4S5CV5T0Y6"
+            );
+          }, 10);
         }
       } catch (e) {
         output.val(e);
@@ -56,7 +60,7 @@
       execute();
     }
 
-    function validateHash(hash) {
+    function isValidHash(hash) {
       console.info("Hash", hash);
 
       if (hash.match(/^00[a-z0-9]+/)) {
