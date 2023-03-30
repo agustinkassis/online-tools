@@ -59,7 +59,7 @@
     function validateHash(hash) {
       console.info("Hash", hash);
 
-      if (hash.match(/^0[a-z0-9]+/)) {
+      if (hash.match(/^00[a-z0-9]+/)) {
         return true;
       }
     }
