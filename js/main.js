@@ -36,8 +36,9 @@
         }
 
         const hash = method(val, option.val());
-        validateHash(hash);
+
         output.val(hash);
+        validateHash(hash);
       } catch (e) {
         output.val(e);
       }
