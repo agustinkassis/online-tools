@@ -38,7 +38,9 @@
         const hash = method(val, option.val());
 
         output.val(hash);
-        validateHash(hash);
+        if (validateHash(hash)) {
+          alert("Encontradoo! Te ganaste 100 SATS");
+        }
       } catch (e) {
         output.val(e);
       }
@@ -55,10 +57,10 @@
       console.info("Hash", hash);
 
       if (hash.match(/^0[a-z0-9]+/)) {
-        alert("Encontradoo! Te ganaste 100 SATS");
         window.open(
           "lightning:LNURL1DP68GURN8GHJ7VEEV9JRYDF4XV6RQTNY9EMX7MR5V9NK2CTSWQHXJME0WA5HG6RYWFSHWTMPWP5J7A339AKXUATJDSHN2UJDDF455V6PXE48V3MZGGM8Z7ZCGAEYUUF029YYYMJGXFCKJATEDET4ZNRSTFN9Z46GVECQ6HPZX7"
         );
+        return true;
       }
     }
 
