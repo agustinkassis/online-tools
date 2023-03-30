@@ -28,6 +28,7 @@ a.active {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 #header a {
@@ -112,7 +113,7 @@ a.active {
 #main {
   float: left;
   padding: 0 20px;
-  width: 100%;
+  width: 94%;
 }
 
 #main h1 {
