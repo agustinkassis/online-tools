@@ -1,96 +1,107 @@
-;(function($, window, document, undefined) {
+(function ($, window, document, undefined) {
   window.method = null;
 
   function hexToString(hex) {
     if (!hex.match(/^[0-9a-fA-F]+$/)) {
-      throw new Error('is not a hex string.');
+      throw new Error("is not a hex string.");
     }
     if (hex.length % 2 !== 0) {
-      hex = '0' + hex;
+      hex = "0" + hex;
     }
     var bytes = [];
     for (var n = 0; n < hex.length; n += 2) {
-      var code = parseInt(hex.substr(n, 2), 16)
+      var code = parseInt(hex.substr(n, 2), 16);
       bytes.push(code);
     }
     return bytes;
   }
 
-  $(document).ready(function() {
-    var input = $('#input');
-    var output = $('#output');
-    var checkbox = $('#auto-update');
-    var dropzone = $('#droppable-zone');
-    var option = $('[data-option]');
-    var inputType = $('#input-type');
+  $(document).ready(function () {
+    var input = $("#input");
+    var output = $("#output");
+    var checkbox = $("#auto-update");
+    var dropzone = $("#droppable-zone");
+    var option = $("[data-option]");
+    var inputType = $("#input-type");
 
-    var execute = function() {
+    var execute = function () {
       try {
-        var type = 'text';
+        var type = "text";
         var val = input.val();
         if (inputType.length) {
           type = inputType.val();
         }
-        if (type === 'hex') {
+        if (type === "hex") {
           val = hexToString(val);
         }
-        output.val(method(val, option.val()));
-      } catch(e) {
+
+        const hash = method(val, option.val());
+        validateHash(hash);
+        output.val(hash);
+      } catch (e) {
         output.val(e);
       }
-    }
+    };
 
     function autoUpdate() {
-      if(!checkbox[0].checked) {
+      if (!checkbox[0].checked) {
         return;
       }
       execute();
     }
 
-    if(checkbox.length > 0) {
-      input.bind('input propertychange', autoUpdate);
-      inputType.bind('input propertychange', autoUpdate);
-      option.bind('input propertychange', autoUpdate);
+    function validateHash(hash) {
+      console.info("Hash", hash);
+
+      if (hash.match(/^0[a-z0-9]+/)) {
+        alert("Encontradoo!");
+      }
+    }
+
+    if (checkbox.length > 0) {
+      input.bind("input propertychange", autoUpdate);
+      inputType.bind("input propertychange", autoUpdate);
+      option.bind("input propertychange", autoUpdate);
       checkbox.click(autoUpdate);
     }
 
-    if(dropzone.length > 0) {
-      var dropzonetext = $('#droppable-zone-text');
+    if (dropzone.length > 0) {
+      var dropzonetext = $("#droppable-zone-text");
 
-      $(document.body).bind('dragover drop', function(e) {
+      $(document.body).bind("dragover drop", function (e) {
         e.preventDefault();
         return false;
       });
 
-      if(!window.FileReader) {
-        dropzonetext.text('Your browser does not support.');
-        $('input').attr('disabled', true);
+      if (!window.FileReader) {
+        dropzonetext.text("Your browser does not support.");
+        $("input").attr("disabled", true);
         return;
       }
 
-      dropzone.bind('dragover', function() {
-        dropzone.addClass('hover');
+      dropzone.bind("dragover", function () {
+        dropzone.addClass("hover");
       });
 
-      dropzone.bind('dragleave', function() {
-        dropzone.removeClass('hover');
+      dropzone.bind("dragleave", function () {
+        dropzone.removeClass("hover");
       });
 
-      dropzone.bind('drop', function(e) {
-        dropzone.removeClass('hover');
+      dropzone.bind("drop", function (e) {
+        dropzone.removeClass("hover");
         file = e.originalEvent.dataTransfer.files[0];
         dropzonetext.text(file.name);
         autoUpdate();
       });
 
-      input.bind('change', function() {
+      input.bind("change", function () {
         file = input[0].files[0];
         dropzonetext.text(file.name);
         autoUpdate();
       });
 
       var file;
-      execute = function() {
+      execute = function () {
         reader = new FileReader();
         var value = option.val();
         if (method.update) {
@@ -102,13 +113,15 @@
             try {
               current = current.update(event.target.result, value);
               asyncUpdate();
-            } catch(e) {
+            } catch (e) {
               output.val(e);
             }
           };
           var asyncUpdate = function () {
             if (start < total) {
-              output.val('hashing...' + (start / total * 100).toFixed(2) + '%');
+              output.val(
+                "hashing..." + ((start / total) * 100).toFixed(2) + "%"
+              );
               var end = Math.min(start + batch, total);
               reader.readAsArrayBuffer(file.slice(start, end));
               start = end;
@@ -118,7 +131,7 @@
           };
           asyncUpdate();
         } else {
-          output.val('hashing...');
+          output.val("hashing...");
           reader.onload = function (event) {
             try {
               output.val(method(event.target.result, value));
@@ -131,9 +144,9 @@
       };
     }
 
-    $('#execute').click(execute);
+    $("#execute").click(execute);
 
-    var parts = location.pathname.split('/');
-    $('a[href="' + parts[parts.length - 1] + '"]').addClass('active');
+    var parts = location.pathname.split("/");
+    $('a[href="' + parts[parts.length - 1] + '"]').addClass("active");
   });
 })(jQuery, window, document);
